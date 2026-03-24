@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+    /* Colors aus deinem Stitch-Design */
+    --color-obsidian: #0A0A0A;
+    --color-surface: #141414;
+    --color-surface-low: #1B1B1B;
+    --color-rose-muted: #C08497;
+    --color-on-surface: #E2E2E2;
+    --color-outline: #404040;
+
+    /* Fonts */
+    --font-headline: "Space Grotesk", sans-serif;
+    --font-body: "Inter", sans-serif;
+    --font-mono: "Space Grotesk", monospace;
+
+    /* Hard Shadows Utilities */
+    --shadow-hard-white: 4px 4px 0px 0px #FFFFFF;
+    --shadow-hard-rose: 4px 4px 0px 0px #C08497;
+    --shadow-hard-obsidian: 4px 4px 0px 0px #0A0A0A;
+}
+
+/* Global Base Styles */
+@layer base {
+    body {
+        @apply bg-obsidian text-on-surface font-body;
+        margin: 0;
+        min-height: 100vh;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        @apply font-headline uppercase tracking-tighter;
+    }
+}
+
+/* Custom Utility Classes */
+@utility scanline {
+    background: linear-gradient(to bottom, transparent 50%, rgba(192, 132, 151, 0.03) 50%);
+    background-size: 100% 4px;
+}
+
+@utility brutalist-border {
+    @apply border-4 border-white;
+}
+
+@utility hard-shadow {
+    box-shadow: 8px 8px 0px #000000;
+}
