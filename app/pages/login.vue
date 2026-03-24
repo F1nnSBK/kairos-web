@@ -70,49 +70,47 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({ layout: false });
+definePageMeta({ layout: false })
 
-const supabase = useSupabaseClient();
-const isRegister = ref(false);
-const email = ref('');
-const password = ref('');
-const loading = ref(false);
-const errorMsg = ref('');
+const supabase = useSupabase()
+const isRegister = ref(false)
+const email = ref('')
+const password = ref('')
+const loading = ref(false)
+const errorMsg = ref('')
+
+// Wenn bereits eingeloggt, direkt weiter
+onMounted(async () => {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (session) navigateTo('/')
+})
 
 const handleAuth = async () => {
-  loading.value = true;
-  errorMsg.value = '';
+  loading.value = true
+  errorMsg.value = ''
 
   try {
-    let response;
+    let response
+
     if (isRegister.value) {
-      // Registrierung
-      response = await supabase.auth.signUp({
-        email: email.value,
-        password: password.value,
-      });
+      response = await supabase.auth.signUp({ email: email.value, password: password.value })
     } else {
-      // Login
-      response = await supabase.auth.signInWithPassword({
-        email: email.value,
-        password: password.value,
-      });
+      response = await supabase.auth.signInWithPassword({ email: email.value, password: password.value })
     }
 
-    if (response.error) throw response.error;
+    if (response.error) throw response.error
 
-    // Julia-Backend Sync (Egal ob Login oder Register)
     if (response.data.user) {
       await $fetch('/api/user', {
         method: 'POST',
         body: { user_id: response.data.user.id }
-      });
-      navigateTo('/');
+      })
+      navigateTo('/')
     }
   } catch (error: any) {
-    errorMsg.value = `Access Denied: ${error.message}`;
+    errorMsg.value = `Access Denied: ${error.message}`
   } finally {
-    loading.value = false;
+    loading.value = false
   }
 }
 </script>

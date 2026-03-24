@@ -20,13 +20,14 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["@nuxtjs/supabase"],
+  modules: [],
 
-  // 4. Supabase Setup
-  supabase: {
-    redirect: false,
-  },
+
   runtimeConfig: {
-    kairosEngineUrl: process.env.KAIROS_ENGINE_URL || "http://localhost:8080",
+  public: {
+    supabaseUrl: process.env.SUPABASE_URL,
+    supabaseKey: process.env.SUPABASE_KEY,
   },
+  kairosEngineUrl: process.env.KAIROS_ENGINE_URL || 'http://localhost:8080',
+}
 });
