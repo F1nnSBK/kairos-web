@@ -26,10 +26,6 @@
               class="text-[10px] font-black text-rose-muted hover:text-white uppercase transition-colors underline underline-offset-4 decoration-2">
               Terminate_Session
             </button>
-            <button @click="loadRecommendations"
-              class="material-symbols-outlined text-white hover:rotate-180 transition-transform active:scale-90 duration-500">
-              refresh
-            </button>
           </div>
         </div>
       </header>
@@ -122,20 +118,32 @@ const loadRecommendations = async () => {
   }
 }
 
-const handleInteraction = async (articleId: string) => {
+/**
+ * @param articleId - Die ID des Artikels
+ * @param action - Die Aktion (z.B. 'click' oder 'dismiss')
+ */
+const handleInteraction = async (articleId: string, action: string = 'click') => {
   if (!user.value?.id) return
+
+  if (action === 'dismiss') {
+    recommendations.value = recommendations.value.filter(a => a.id !== articleId)
+  }
+
   try {
     await $fetch('/api/click', {
       method: 'POST',
       body: {
         user_id: user.value.id,
-        article_id: articleId
+        article_id: articleId,
+        action: action
       }
     })
-    // Sofortiges Feedback: Neu laden um Bandit-State zu aktualisieren
-    await loadRecommendations()
+
+    if (action === 'click') {
+      await loadRecommendations()
+    }
   } catch (err) {
-    console.error("Interaction Tracking Error:", err)
+    console.error("Signal propagation failed:", err)
   }
 }
 

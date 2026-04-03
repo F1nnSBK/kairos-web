@@ -46,11 +46,11 @@
         </div>
 
         <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t-2 border-outline/30">
-          <a :href="article.url" target="_blank" @click="$emit('interact', article.id)"
+          <a :href="article.url" target="_blank" @click="$emit('interact', article.id, 'click')"
             class="flex-1 bg-white text-obsidian text-center py-2 font-black uppercase text-[10px] tracking-widest hover:bg-rose-muted transition-colors border-2 border-white shadow-hard-obsidian hover:shadow-none active:translate-x-0.5 active:translate-y-0.5">
             Open_Report
           </a>
-          <button @click="$emit('interact', article.id)"
+          <button @click="$emit('interact', article.id, 'dismiss')"
             class="px-3 py-2 border-2 border-white text-white hover:bg-white hover:text-obsidian transition-all uppercase font-black text-[9px] tracking-widest">
             Dismiss
           </button>
