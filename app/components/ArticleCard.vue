@@ -40,9 +40,13 @@
       </div>
 
       <div class="space-y-4">
-        <div class="bg-obsidian border-2 border-outline px-3 py-1 inline-flex items-center gap-2">
-          <span class="material-symbols-outlined text-xs text-rose-muted">analytics</span>
-          <span class="text-[9px] font-bold uppercase tracking-widest text-white">Vector_Match</span>
+        <div class="bg-obsidian border-2 border-outline px-3 py-1 flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm text-rose-muted">
+            {{ article.metadata.is_discovery ? 'explore' : 'psychology' }}
+          </span>
+          <span class="text-[10px] font-bold uppercase tracking-widest text-white">
+            {{ article.metadata.match_pct }}% Match
+          </span>
         </div>
 
         <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t-2 border-outline/30">
@@ -68,6 +72,11 @@ defineProps<{
     url: string;
     image_url: string;
     timestamp: string;
+    metadata: {
+      is_discovery: boolean;
+      match_pct: number;
+      confidence: number;
+    };
   }
 }>();
 

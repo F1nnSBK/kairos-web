@@ -2,7 +2,6 @@
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
 
-  // 1. Body vom Frontend lesen (enthält { user_id: '...' })
   const body = await readBody(event);
 
   if (!body.user_id) {
@@ -13,8 +12,6 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    // 2. Weiterleitung an die Julia Engine
-    // Wir nutzen die URL aus der Runtime Config
     const response = await $fetch(`${config.kairosEngineUrl}/user`, {
       method: "POST",
       body: {
@@ -22,7 +19,6 @@ export default defineEventHandler(async (event) => {
       },
     });
 
-    // 3. Antwort von Julia an Nuxt-Frontend zurückgeben
     return response;
   } catch (error: any) {
     console.error(
@@ -31,7 +27,7 @@ export default defineEventHandler(async (event) => {
     );
 
     throw createError({
-      statusCode: 502, // Bad Gateway (Julia ist down oder antwortet falsch)
+      statusCode: 502,
       statusMessage: "Intelligence Engine Synchronization Failed",
       data: error.data,
     });

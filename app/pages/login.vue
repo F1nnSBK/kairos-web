@@ -79,7 +79,6 @@ const password = ref('')
 const loading = ref(false)
 const errorMsg = ref('')
 
-// Wenn bereits eingeloggt, direkt weiter
 onMounted(async () => {
   const { data: { session } } = await supabase.auth.getSession()
   if (session) navigateTo('/')
