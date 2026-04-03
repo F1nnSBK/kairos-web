@@ -90,7 +90,6 @@ const handleAuth = async () => {
 
   try {
     let response
-
     if (isRegister.value) {
       response = await supabase.auth.signUp({ email: email.value, password: password.value })
     } else {
@@ -99,11 +98,24 @@ const handleAuth = async () => {
 
     if (response.error) throw response.error
 
-    if (response.data.user) {
+    const user = response.data.user
+    if (user) {
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('onboarded, categories')
+        .eq('id', user.id)
+        .single()
+
       await $fetch('/api/user', {
         method: 'POST',
-        body: { user_id: response.data.user.id }
+        body: {
+          user_id: user.id,
+          categories: profile?.categories || [],
+          onboarded: profile?.onboarded || false
+        }
       })
+
       navigateTo('/')
     }
   } catch (error: any) {

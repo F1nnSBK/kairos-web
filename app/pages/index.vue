@@ -22,6 +22,10 @@
           <p class="text-[9px] font-bold text-outline uppercase mb-1">Operator_Identity</p>
           <p class="text-[11px] font-mono text-white truncate mb-4 select-all">{{ user.email }}</p>
           <div class="flex justify-between items-center pt-3 border-t border-outline/30">
+            <button @click="navigateTo('/user/' + user.id)"
+              class="text-[10px] font-black text-rose-muted hover:text-white uppercase transition-colors underline underline-offset-4 decoration-2">
+              View_Profile
+            </button>
             <button @click="logout"
               class="text-[10px] font-black text-rose-muted hover:text-white uppercase transition-colors underline underline-offset-4 decoration-2">
               Terminate_Session
@@ -64,6 +68,7 @@
                   <span>Node_ID:</span>
                   <span>{{ nodeId }}</span>
                 </div>
+              
               </div>
             </div>
 
@@ -86,10 +91,7 @@
 </template>
 
 <script setup lang="ts">
-/**
- * INTELLIGENCE FEED LOGIC (Kairos Engine)
- * Finn Hertsch // Hertsch Technologies UG
- */
+
 
 definePageMeta({ layout: false })
 
@@ -103,14 +105,24 @@ const loading = ref(false)
 const nodeId = computed(() => user.value?.id ? user.value.id.slice(0, 12).toUpperCase() : 'UNKNOWN')
 
 // --- Actions ---
-const loadRecommendations = async () => {
+const loadRecommendations = async (silent = false) => {
   if (!user.value?.id) return
-  loading.value = true
+  if (!silent) loading.value = true
+
   try {
     const data = await $fetch<{ recommendations: any[] }>('/api/recommend', {
       query: { user_id: user.value.id }
     })
-    recommendations.value = data?.recommendations || []
+
+    const newRecs = data?.recommendations || []
+
+    if (silent) {
+      const existingIds = new Set(recommendations.value.map(a => a.id))
+      const uniqueNew = newRecs.filter(a => !existingIds.has(a.id))
+      recommendations.value = [...recommendations.value, ...uniqueNew]
+    } else {
+      recommendations.value = newRecs
+    }
   } catch (err) {
     console.error("Vector Fetch Error:", err)
   } finally {
@@ -118,10 +130,6 @@ const loadRecommendations = async () => {
   }
 }
 
-/**
- * @param articleId - Die ID des Artikels
- * @param action - Die Aktion (z.B. 'click' oder 'dismiss')
- */
 const handleInteraction = async (articleId: string, action: string = 'click') => {
   if (!user.value?.id) return
 
@@ -141,6 +149,11 @@ const handleInteraction = async (articleId: string, action: string = 'click') =>
 
     if (action === 'click') {
       await loadRecommendations()
+    } else if (action === 'dismiss') {
+      if (recommendations.value.length <= 3) {
+        console.log("!!! REFILL_TRIGGERED // Low_Vector_Count")
+        await loadRecommendations(true)
+      }
     }
   } catch (err) {
     console.error("Signal propagation failed:", err)

@@ -32,7 +32,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   if (onboardingState.value === null) {
     const { data: profile } = await client
       .from("profiles")
-      .select("onboarded")
+      .select("*")
       .eq("id", user.id)
       .single();
 

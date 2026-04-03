@@ -12,7 +12,7 @@ const CATEGORIES = {
 }
 
 // --- State ---
-const client = useSupabase() // Dein eigenes Composable
+const client = useSupabase()
 const user = ref<any>(null)
 const loading = ref(false)
 const selectedTags = ref<string[]>([])
@@ -27,11 +27,10 @@ const toggleTag = (category: string) => {
 }
 
 const submitOnboarding = async () => {
-  // Check, ob wir eine ID haben
   const currentUserId = user.value?.id
-  const onboardingState = useState<boolean | null>('onboarding_status');
-  if (!currentUserId || loading.value) return
+  const onboardingState = useState<boolean | null>('onboarding_status')
 
+  if (!currentUserId || loading.value) return
   loading.value = true
 
   try {
@@ -39,18 +38,24 @@ const submitOnboarding = async () => {
       .from('profiles')
       .update({
         onboarded: true,
-        categories: selectedTags.value,
-        updated_at: new Date().toISOString()
+        categories: selectedTags.value
       })
       .eq('id', currentUserId)
 
-    if (!error) {
-      // Hard Redirect, damit die Middleware auf jeden Fall neu triggert
-      onboardingState.value = true;
-      return navigateTo('/');
-    } else {
-      console.error("Supabase Update Error:", error)
-    }
+    if (error) throw error
+
+    await $fetch('/api/user', {
+      method: 'POST',
+      body: {
+        user_id: currentUserId,
+        categories: selectedTags.value,
+        onboarded: true
+      }
+    })
+
+    onboardingState.value = true
+    return navigateTo('/')
+
   } catch (err) {
     console.error("Alignment Failed:", err)
   } finally {
@@ -58,14 +63,11 @@ const submitOnboarding = async () => {
   }
 }
 
-// --- Lifecycle ---
 onMounted(async () => {
-  // Wir holen uns den User direkt über deinen Client
   const { data: { session } } = await client.auth.getSession()
   if (session) {
     user.value = session.user
   } else {
-    // Falls keine Session da ist, ab zum Login
     navigateTo('/login')
   }
 })

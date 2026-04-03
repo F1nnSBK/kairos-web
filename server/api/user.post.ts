@@ -7,7 +7,8 @@ export default defineEventHandler(async (event) => {
   if (!body.user_id) {
     throw createError({
       statusCode: 400,
-      statusMessage: "Missing user_id in registration payload",
+      statusMessage:
+        "KAIROS_IDENTITY_ERROR: No user_id provided for synchronization.",
     });
   }
 
@@ -16,8 +17,14 @@ export default defineEventHandler(async (event) => {
       method: "POST",
       body: {
         user_id: body.user_id,
+        categories: body.categories || [],
+        onboarded: body.onboarded || false,
       },
     });
+
+    console.log(
+      `[BFF] Synced User ${body.user_id.slice(0, 8)} | Interests: ${body.interests?.length || 0} | Onboarded: ${body.onboarded}`,
+    );
 
     return response;
   } catch (error: any) {
