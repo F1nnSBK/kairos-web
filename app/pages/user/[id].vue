@@ -27,34 +27,34 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="p-8 bg-obsidian min-h-screen text-white">
-    <div v-if="isLoading" class="animate-pulse text-rose-muted font-mono uppercase">
-      > FETCHING_USER_DATA...
+  <div class="p-6 bg-obsidian min-h-screen text-white">
+    <div v-if="isLoading" class="animate-pulse text-rose-muted font-mono text-sm uppercase">
+      Loading...
     </div>
 
-    <div v-else-if="profile" class="max-w-xl border-4 border-white p-8 shadow-hard-white bg-surface">
-      <h1 class="text-4xl font-black uppercase mb-6">Operator_Profile</h1>
+    <div v-else-if="profile" class="max-w-xl border-4 border-white p-6 bg-surface">
+      <h1 class="text-2xl font-black uppercase mb-6">Profile</h1>
 
       <div class="space-y-4 font-mono text-xs">
-        <div class="flex justify-between border-b border-white/20 pb-2">
-          <span class="text-outline uppercase">UUID:</span>
-          <span>{{ profile.id }}</span>
+        <div class="flex flex-col gap-1 border-b border-white/20 pb-3">
+          <span class="text-outline uppercase text-[10px]">User ID</span>
+          <span class="break-all">{{ profile.id }}</span>
         </div>
 
-        <div class="border-b border-white/20 pb-2">
-          <p class="text-outline uppercase mb-2">Interests_Vector_Clusters:</p>
+        <div class="border-b border-white/20 pb-3">
+          <p class="text-outline uppercase text-[10px] mb-2">Interests</p>
           <div class="flex flex-wrap gap-2">
-            <span v-for="cat in profile.categories" :key="cat" class="bg-rose-muted text-obsidian px-2 py-1 font-black">
+            <span v-for="cat in profile.categories" :key="cat"
+              class="bg-rose-muted text-obsidian px-2 py-1 font-black text-[10px]">
               {{ cat }}
             </span>
           </div>
         </div>
-        <div class="flex justify-between border-b border-obsidian/10 pb-1">
-          <button @click="navigateTo('/')"
-            class="text-[10px] font-black text-rose-muted hover:text-white uppercase transition-colors underline underline-offset-4 decoration-2">
-            Back_To_Feed
-          </button>
-        </div>
+
+        <button @click="navigateTo('/')"
+          class="text-[10px] font-black text-rose-muted hover:text-white uppercase transition-colors underline underline-offset-4 decoration-2">
+          ← Back
+        </button>
       </div>
     </div>
   </div>

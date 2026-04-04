@@ -45,10 +45,9 @@
                 loading ? 'bg-surface text-outline' : 'bg-rose-muted text-obsidian'
               ]">
                 <span v-if="loading" class="material-symbols-outlined animate-spin font-black">sync</span>
-                <span v-else class="material-symbols-outlined font-black">{{ isRegister ? 'person_add' :
-                  'power_settings_new' }}</span>
+                <span v-else-if="isRegister" class="material-symbols-outlined font-black">person_add</span>
                 <span class="font-black uppercase tracking-widest text-sm">
-                  {{ loading ? 'Processing...' : (isRegister ? 'Register Identity' : 'Initialize Session') }}
+                  {{ loading ? 'Loading...' : (isRegister ? 'Register' : 'Login') }}
                 </span>
               </div>
             </button>
