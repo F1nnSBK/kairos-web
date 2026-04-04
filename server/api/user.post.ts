@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
       method: "POST",
       body: {
         user_id: body.user_id,
-        categories: body.categories || [],
+        interests: body.categories || [],
         onboarded: body.onboarded || false,
       },
     });
