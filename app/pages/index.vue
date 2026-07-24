@@ -73,8 +73,11 @@
             </div>
 
             <div
-              class="hidden md:block p-4 border-2 border-outline/20 text-[9px] text-outline uppercase font-bold tracking-widest">
-              Hertsch_Technologies // Secure_Link_Established
+              class="hidden md:block p-4 border-2 border-outline/20 text-[9px] uppercase font-bold tracking-widest">
+              <a href="https://github.com/F1nnSBK/Project-Kairos" target="_blank" rel="noopener noreferrer" class="text-outline hover:text-rose-muted transition-colors flex items-center justify-between">
+                <span>GitHub // Project_Kairos</span>
+                <span>↗</span>
+              </a>
             </div>
           </div>
         </aside>
